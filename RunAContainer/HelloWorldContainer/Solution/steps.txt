@@ -1,0 +1,56 @@
+Solution:
+
+Step 1 :Install Docker in your Workstation ( be it windows or linux or Mac Os).
+
+Refer https://docs.docker.com/install/ for more information. Linux installation is shown below:
+
+$ sudo apt-get update
+$ sudo apt-get install \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg-agent \
+    software-properties-common
+$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+$ sudo add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+$ sudo apt-get update
+$ sudo apt-get install docker-ce docker-ce-cli containerd.io
+$ docker --version
+
+Step 2 : Search for hello-world image in Docker Hub
+
+$ docker search hello-world
+
+Step 3 : Pull down the hello-world image from Docker Hub to your workstation
+
+$ docker pull hello-world
+
+Step 4 : Create a container with "hello-world" image and name it as "MyHelloContainer"
+
+$ docker create --name "MyHelloContainer" hello-world
+
+Step 5 : List all the containers ( running and stopped) in the workstation
+
+$ docker ps -a
+
+Step 6 : List all the images in the workstation
+
+$ docker image ls
+
+Step 7 : Start the container and print the "Hello from Docker!" in the terminal
+
+$ docker start -a MyHelloContainer
+
+Step 8 : Remove the MyHelloContainer
+
+$ docker rm MyHelloContainer
+
+Step 9 : Remove the "hello-world" image
+
+$ docker rmi hello-world
+
+
+
