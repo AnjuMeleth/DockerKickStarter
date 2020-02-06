@@ -1,0 +1,3 @@
+Question : 
+
+Run a Ubuntu container and access it in a interactive terminal. Also run the "pwd" command in the container.

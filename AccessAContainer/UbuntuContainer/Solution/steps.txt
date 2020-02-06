@@ -1,0 +1,15 @@
+Solution :
+
+Step 1: Run a container named "MyUbuntu" using latest Ubuntu image in Docker Hub.Then open interactive bash terminal in the container. 
+
+$ docker run -itd --name MyUbuntu ubuntu:latest
+
+Step 2: Attach the container to the terminal
+
+$ docker attach MyUbuntu
+
+Step 3: Run the command "pwd" on the terminal. Note that you are inside the container.
+
+root@5bc066f98495:/# pwd
+
+
