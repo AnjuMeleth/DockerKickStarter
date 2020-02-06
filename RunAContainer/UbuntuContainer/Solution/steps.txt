@@ -1,0 +1,18 @@
+Solution :
+
+Step 1 : Pull "ubuntu" image tagged as latest from Docker Hub  and then create , run the container naming it as "MyUbuntu". 
+
+docker run ~ docker pull + docker create + docker start
+
+$ docker run -d --name MyUbuntu ubuntu:latest
+
+Step 2: List all the running containers only ( our container won't be listed as it has stopped after running).
+
+$ docker ps
+
+Step 3: List all the containers in our workstation
+
+$ docker ps -a
+
+
+
