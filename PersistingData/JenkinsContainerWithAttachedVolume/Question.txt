@@ -1,0 +1,4 @@
+
+Question :
+
+Create a Jenkins container whose data persist even after deleting the container so that it could be shared with other Jenkins containers.
