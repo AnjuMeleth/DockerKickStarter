@@ -1,0 +1,4 @@
+Question :
+
+Create a local image repository for your organisation and push an image to it. Team members should also be able to retreive it as well
+
