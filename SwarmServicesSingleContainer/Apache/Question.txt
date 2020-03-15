@@ -1,0 +1,2 @@
+Question :
+Deploy a apache service onto a swarm cluster in port 8003 
