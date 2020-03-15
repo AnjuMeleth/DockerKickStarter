@@ -5,7 +5,7 @@ wordpress:
         ports:
                 - "8080:80"
         
-wordpressdb:
+wordpress_db:
         image: mariadb
         environment:
                 MYSQL_ROOT_PASSWORD: test
