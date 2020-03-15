@@ -1,0 +1,2 @@
+Question :
+Create a wordpress application using MariaDb as database and phpmyadmin
