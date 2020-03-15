@@ -1,0 +1,2 @@
+Question :
+Apply a multi-tier application onto Docker swarm. Here we are using a voting app
