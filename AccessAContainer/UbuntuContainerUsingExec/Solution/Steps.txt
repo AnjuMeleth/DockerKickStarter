@@ -1,0 +1,3 @@
+docker run -itd ubuntu
+docker ps
+docker exec -it 4a /bin/bash
