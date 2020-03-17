@@ -1,0 +1,2 @@
+Question :
+Run an Apache service on the Swarm cluster with one manager node and one worker node. Leave the worker node from the cluster. See the outcome

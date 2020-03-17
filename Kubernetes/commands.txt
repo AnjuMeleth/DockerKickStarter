@@ -1,0 +1,6 @@
+kubectl create deployment helloworld --image=gcr.io/google_containers/echoserver:1.4
+kubectl expose deployment helloworld --type=NodePort --port 8080
+kubectl get services
+minikube service helloworld --url
+curl http://207.148.101.217:31129
+
