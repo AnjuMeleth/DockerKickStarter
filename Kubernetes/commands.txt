@@ -3,4 +3,7 @@ kubectl expose deployment helloworld --type=NodePort --port 8080
 kubectl get services
 minikube service helloworld --url
 curl http://207.148.101.217:31129
+kubectl apply -f nginx-deployment.yaml
+kubectl expose deployment nginx-deployment1 --type=NodePort --port 80
+kubectl get services
 
