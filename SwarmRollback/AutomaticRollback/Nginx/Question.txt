@@ -1,0 +1,2 @@
+Question :
+Perform an automatic roll back after updating the service from nginx: latest to nginx:final
