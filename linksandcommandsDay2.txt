@@ -1,0 +1,65 @@
+
+394  vi docker-compose.yml
+  395  docker-compose up -d
+  396  vi docker-compose.yml
+  397  docker-compose down
+# Manager node
+427  docker swarm init --advertise-addr <ip> address
+  428  docker node ls
+docker swarm join-token manager
+docker swarm join-token worker
+# worker node
+sh install.sh
+    8  docker swarm join --token <token>
+
+#manager node
+docker service create --name apache2 --mode global -d -p 8003:80 httpd
+  475  docker service ls
+  477  docker service ps apache2
+597  vi docker-stack.yml
+  598  docker stack deploy --compose-file docker-stack.yml vote
+  599  docker service ls
+  600  docker stack ps
+  601  docker stack ls
+  602  docker stack ps vote
+
+docker service create --name my-service -p 8080:80 nginx:alpine
+docker service ls
+docker service update --replicas=3 my-service
+docker service ls
+docker service rollback my-service
+docker service update --image=nginx:latest my-service
+docker service ls
+docker service rollback my-service
+docker service ls
+docker service rm my-service
+
+docker service create --name nginx-service --replicas 2 --update-failure-action rollback nginx:latest
+docker service update --image=nginx:final nginx-service
+
+
+docker service create --name apache2 --replicas=3 -p 8080:80 httpd 
+curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+chmod +x ./kubectl
+sudo mv ./kubectl /usr/local/bin/kubectl
+kubectl version --client=true
+curl -Lo minikube https://storage.googleapis.com/minikube/releases/v1.2.0/minikube-linux-amd64 && chmod +x minikube && sudo cp minikube /usr/local/bin/ && rm minikube
+sudo minikube version
+sudo minikube start --vm-driver=none
+
+sudo minikube start --vm-driver=none
+minikube version
+
+ 45  kubectl create deployment helloworld --image=gcr.io/google_containers/echoserver:1.4
+   46  kubectl expose deployment helloworld --type=NodePort
+   47  kubectl expose deployment helloworld --type=NodePort --port 8080
+   48  kubectl delete service helloworld
+   49  kubectl expose deployment helloworld --type=NodePort --port 8080
+   50  kubectl get services
+   51  minikube service hello-minikube --url
+   52  minikube service hello-world --url
+   53  minikube service helloworld --url
+   54  curl http://207.148.101.217:31129
+
+
+

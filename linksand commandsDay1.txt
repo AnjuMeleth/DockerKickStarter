@@ -1,0 +1,100 @@
+sh install.sh
+96  docker run hello-world
+   97  docker run -d hello-world
+   98  docker ps
+   99  docker run -d ubuntu sleep 30
+  100  docker ps
+  101  docker ps -a
+  102  docker ps
+  103  docker run -itd --name MyUbuntu ubuntu
+docker attach MyUbuntu
+  107  docker stop MyUbuntu
+  108  docker run -it --name MyUbuntu1 ubuntu
+  109  docker ps
+111  docker image ls
+  112  docker image inspect ubuntu
+117  docker image history ubuntu
+119  cd /var/lib/docker => images stored
+165  docker run -itd --name MyUbuntu ubuntu
+  166  docker ps
+  167  docker stop 08
+  168  docker ps
+  169  docker start 08
+  170  docker ps
+  171  docker pause 08
+  172  docker ps
+  173  docker unpause 08
+  174  docker restart 08
+190  docker run -p 50000:50000 -p 8080:8080 jenkins/jenkins
+  191  docker ps
+  192  docker ps -a
+  193  docker rm 46 76 3e
+  194  docker ps -a
+  195  docker start 89
+  196  docker pause 89
+  197  docker ps
+  198  docker unpause 89
+  199  docker restart 89
+  200  docker stop 89
+  201  docker rm 89
+Ctrl +C comes out of jenkins
+ 203  docker volume create my-vol
+  204  docker volume inspect
+  205  docker volume inspect my-vol
+  206  docker run -p 50000:50000 -p 8080:8080 -v my-vol:/var/jenkins_home --name MyJenkins jenkins/jenkins
+  207  docker ps -a
+  208  docker rm cf
+  209  docker run -p 50000:50000 -p 8080:8080 -v my-vol:/var/jenkins_home --name NewJenkins jenkins/jenkins
+  210  docker rm NewJenkins
+212  docker run -p 50000:50000 -p 8080:8080 --name NewJenkins jenkins/jenkins
+221  docker cp NewJenkins:/var/jenkins_home ./data
+228  docker ps
+  229  docker stop 37
+  230  docker ps -a
+  231  docker rm 37
+269  chown -R 1000 data
+  270  docker run -p 50000:50000 -p 8080:8080 -v ~/data/jenkins_home:/var/jenkins_home --name DataJenkins jenkins/jenkins
+276  docker run -it --name MyUbuntu ubuntu
+  277  docker ps -a
+279  docker commit 0d newubuntu
+  280  docker ps -a
+  281  docker rm 0d
+  282  docker rm --force 0d
+  283  docker image ls
+288  docker run -it --name Ubuntu1 newubuntu #lowercase image name
+305  docker build . -t webapp
+  306  docker image inspect webapp
+  308  docker image history webapp
+  309  docker run 7d3c9cd1de2a
+  310  docker ps
+  311  docker ps -a
+  312  docker image ls
+  17  docker run -d -p 5000:5000 --name MyApp webapp
+319  docker tag webapp anjurose/my-app
+  320  docker image ls
+  321  docker push
+  322  docker push anjurose/my-app
+  323  docker login
+  324  docker push anjurose/newapp
+  325  docker push anjurose/my-app
+  326  docker save anjurose/my-app > app.tar
+  327  ls
+  328  docker rmi anjurose/my-app
+  329  docker image ls
+  330  docker load -i app.tar
+  331  docker image ls
+  332  docker run -it --name MyUbuntu newubuntu
+  333  docker ps
+  334  docker export MyUbuntu > newapp.tar
+  335  docker import - anjurose/finalapp < newapp.tar
+349  docker run -d -p 5000:5000 registry:2
+  350  curl -i http://localhost:5000/v2/
+  351  docker tag anjurose/my-app localhost:5000/webapp
+  352  docker push localhost:5000/webapp
+  353  docker rmi localhost:5000/webapp
+  354  docker image ls
+  355  docker pull localhost:5000/webapp
+  356  docker image ls
+
+
+
