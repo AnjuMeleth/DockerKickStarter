@@ -1,4 +1,6 @@
+
 kubectl create deployment helloworld --image=gcr.io/google_containers/echoserver:1.4
+
 kubectl expose deployment helloworld --type=NodePort --port 8080
 kubectl get services
 minikube service helloworld --url
@@ -7,3 +9,66 @@ kubectl apply -f nginx-deployment.yaml
 kubectl expose deployment nginx-deployment1 --type=NodePort --port 80
 kubectl get services
 
+ ################replication controller
+  150  kubectl apply -f nginx-replicationcontroller.yml
+  151  kubectl describe replicationcontrollers/nginx
+  152  pods=$(kubectl get pods --selector=app=nginx --output=jsonpath={.items..metadata.name})
+  153  echo $pods
+  157  kubectl delete pods --selector=app=nginx
+  158  kubectl describe replicationcontrollers/nginx
+  159  kubectl delete replicationcontrollers/nginx
+  161  kubectl get pods
+
+######Services
+  165  kubectl apply -f nginx-deployment.yaml
+  166  kubectl get pods
+  169  vi nginx-service.yml
+  170  kubectl apply -f nginx-service.yml
+  172  kubectl get svc
+
+### Service discovery
+  182  kubectl apply -f nginx-deployment.yaml
+  183  kubectl apply -f nginx-service.yml
+  184  kubectl get pods
+  185  kubectl exec nginx-deployment1-689676bf79-2zzqh -- printenv | grep SERVICE
+  187  kubectl scale deployment nginx-deployment1 --replicas=0
+  188  kubectl get pods
+  190  kubectl scale deployment nginx-deployment1 --replicas=3
+  191  kubectl get pods
+  192  kubectl get pods -l app=nginx1
+  193  kubectl exec nginx-deployment1-689676bf79-2w9sr -- printenv | grep SERVICE
+ # method 2 
+  kubectl get services kube-dns --namespace=kube-system
+  213  kubectl run curl --image=radial/busyboxplus:curl -i --tty
+  nslookup my-nginx
+
+### ConfigMap
+  mkdir -p configure-pod-container/configmap/
+  217  ls
+  218  wget https://kubernetes.io/examples/configmap/game.properties -O configure-pod-container/configmap/game.properties
+  219  wget https://kubernetes.io/examples/configmap/ui.properties -O configure-pod-container/configmap/ui.properties
+  220  ls
+  221  cd configure-pod-container/
+  222  ls
+  223  cd configmap/
+  224  ls
+  225  vi game.properties
+  226  vi ui.properties
+  227  vi game.properties
+  229  ls
+  # should be in kubernetes path
+  230  kubectl create configmap game-config --from-file=./configure-pod-container/configmap/
+  231  cd ../../
+  232  kubectl create configmap game-config --from-file=configure-pod-container/configmap/
+  233  kubectl describe configmaps game-config
+  234  kubectl get configmaps game-config -o yaml
+
+### Secrets
+  237  echo -n 'admin' > ./username.txt
+  238  echo -n '1f2d1e2e67df' > ./password.txt
+  239  ls
+  240  kubectl create secret generic db-user-pass --from-file=./username.txt --from-file=./password.txt
+  241  kubectl get secrets
+  242  kubectl describe secrets/db-user-pass
+  243  kubectl get secret db-user-pass -o yaml
+  245  echo 'MWYyZDFlMmU2N2Rm' | base64 --decode
