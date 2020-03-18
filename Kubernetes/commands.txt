@@ -72,3 +72,60 @@ kubectl get services
   242  kubectl describe secrets/db-user-pass
   243  kubectl get secret db-user-pass -o yaml
   245  echo 'MWYyZDFlMmU2N2Rm' | base64 --decode
+
+  #### kubeadm installation in master
+    1  apt-get update
+    2  swapoff -a
+    3  vi /etc/hosts
+    8  sudo service ssh start
+    9  eval `ssh-agent -s`
+   10  ssh-keygen -t rsa   #passwordless connection
+   11  ssh root@node2 mkdir -p .ssh
+   12  cat .ssh/id_rsa.pub | ssh root@node2 'cat >> .ssh/authorized_keys'
+   13  ssh root@node2 "chmod 700 .ssh; chmod 640 .ssh/authorized_keys"
+   14  ssh root@node2
+   16  apt-get install -y docker.io
+   17  sudo apt-get update && sudo apt-get install -y apt-transport-https
+   18  curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+   19  echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+   20  sudo apt-get update
+   21  sudo apt-get install -y kubectl
+   22  apt-get install -y kubelet kubeadm kubectl
+   23  nano /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+   # include this line Environment="cgroup-driver=systemd/cgroup-driver=cgroupfs"
+# reboot
+   kubeadm init --apiserver-advertise-address=<ipaddress> --pod-network-cidr=10.244.0.0/16
+   31  adduser demo
+   32  usermod -aG sudo demo
+   33  mkdir -p $HOME/.kube
+   34  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+   35  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+   36  kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/2140ac876ef134e0ed5af15c65e414cf26827915/Documentation/kube-flannel.yml
+   37  kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta4/aio/deploy/recommended.yaml
+   38  kubectl get svc --all-namespaces
+   39  kubectl edit services kubernetes-dashboard -n kubernetes-dashboard
+   40  kubectl get svc --all-namespaces
+   kubectl proxy & # open another terminal
+   https://<ipaddress>:31939/#/login
+   29  kubectl create serviceaccount dashboard -n default
+   30  kubectl create clusterrolebinding dashboard-admin -n default  --clusterrole=cluster-admin  --serviceaccount=default:dashboard
+   31  kubectl get secret $(kubectl get serviceaccount dashboard -o jsonpath="{.secrets[0].name}") -o jsonpath="{.data.token}" | base64 --decode
+   # if the token expires run the below command once again and use the token
+    10 kubectl get secret $(kubectl get serviceaccount dashboard -o jsonpath="{.secrets[0].name}") -o jsonpath="{.data.token}" | base64 --decode
+# if join token for the worker node is lost you can make use of 
+kubeadm token create --print-join-command	
+
+
+### in worker node
+   15  apt-get update
+   16  swapoff -a
+   17  vi /etc/hosts
+   18  sudo apt-get update && sudo apt-get install -y apt-transport-https
+   19  curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+   20  echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+   21  sudo apt-get update
+   22  sudo apt-get install -y kubectl
+   23  apt-get install -y kubelet kubeadm kubectl
+   24  nano /etc/systemd/system/kubelet.service.d/10-kubeadm.con
+   25  nano /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+   26  kubeadm join <token>
