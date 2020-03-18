@@ -1,0 +1,135 @@
+Kubernetes
+=================
+# https://kubernetes.io/blog/2016/07/autoscaling-in-kubernetes/ => to know more about auto scaling 
+# https://learnk8s.io/kubernetes-rollbacks -> roll backs and roll updates
+# https://kubernetes.io/docs/concepts/overview/components/ => kubernetes components
+# installing kubernetes on the manager node
+===============================
+    2  apt-get update
+    3  swapoff -a
+    4  vi /etc/hosts   => enter the details about the master and nodes (ip address) mapping to their hostnames
+# set passwordless conncetion with all nodes from master   
+   12  ssh-keygen -t rsa
+   13  ssh root@node1 mkdir -p .ssh
+   14  cat .ssh/id_rsa.pub | ssh root@node1 'cat >> .ssh/authorized_keys'
+   15  ssh root@node1 "chmod 700 .ssh; chmod 640 .ssh/authorized_keys"
+   16  ssh root@node1
+   12  ssh-keygen -t rsa
+   13  ssh root@host mkdir -p .ssh
+   14  cat .ssh/id_rsa.pub | ssh root@host 'cat >> .ssh/authorized_keys'
+   15  ssh root@host "chmod 700 .ssh; chmod 640 .ssh/authorized_keys"
+   16  ssh root@host
+   19  apt-get install -y docker.io
+   20  sudo apt-get update && sudo apt-get install -y apt-transport-https
+   21  curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+   22  echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+   23  sudo apt-get update
+   24  sudo apt-get install -y kubectl
+   25  apt-get install -y kubelet kubeadm kubectl
+   26  nano /etc/systemd/system/kubelet.service.d/10-kubeadm.conf  
+# enter the below line
+   Environment="cgroup-driver=systemd/cgroup-driver=cgroupfs"
+   27  kubeadm init --apiserver-advertise-address=<Ipaddress of the master> --pod-network-cidr=10.244.0.0/16 # save the token for adding a worker node
+   28 adduser demo
+   29 usermod -aG sudo demo
+   30 mkdir -p $HOME/.kube
+    2 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+    5  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+From demo user
+    6  kubectl get pods -o wide --all-namespaces
+    7  kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/2140ac876ef134e0ed5af15c65e414cf26827915/Documentation/kube-flannel.yml
+    8  kubectl get pods -o wide --all-namespaces
+    9  kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta4/aio/deploy/recommended.yaml
+   11  kubectl get pods -o wide --all-namespaces
+    6  kubectl get pods -o wide --all-namespaces
+    7  kubectl get svc --all-namespaces
+    8  kubectl edit services kubernetes-dashboard -n kubernetes-dashboard     # change type from ClusterIp to NodePort
+    9  kubectl get svc --all-namespaces # get the port for kubernetes dashboard
+    10 kubectl proxy & # start the below commands in new terminal otherwise proxy will stop
+
+# connect to the kubernetes dashboard using the Url and port retreived in above step, please do not use chrome use other browsers like firefox
+https://<ipaddress:port>
+# create dashboard service accont token. Use this token in the dashboard 
+    7  kubectl create serviceaccount dashboard -n default
+    8  kubectl create clusterrolebinding dashboard-admin -n default  --clusterrole=cluster-admin  --serviceaccount=default:dashboard
+    9  kubectl get secret $(kubectl get serviceaccount dashboard -o jsonpath="{.secrets[0].name}") -o jsonpath="{.data.token}" | base64 --decode
+# if the token expires run the below command once again and use the token
+    10 kubectl get secret $(kubectl get serviceaccount dashboard -o jsonpath="{.secrets[0].name}") -o jsonpath="{.data.token}" | base64 --decode
+# if join token for the worker node is lost you can make use of 
+kubeadm token create --print-join-command
+
+# installation at the worker nodes
+=======================================
+
+    3  apt-get update
+    4  swapoff -a
+    5  nano /etc/hosts
+    6  apt-get update
+    7  apt-get install -y docker.io
+    8  sudo apt-get update && sudo apt-get install -y apt-transport-https
+    9  curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+   10  echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+   11  sudo apt-get update
+   12  sudo apt-get install -y kubectl
+   13  apt-get install -y kubelet kubeadm kubectl
+   14  nano /etc/systemd/system/kubelet.service.d/10-kubeadm.con
+   15  nano /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+   16  kubeadm join <token> => generated form kubeadm init command
+
+# deploying apache server onto the kubernetes cluster
+===========================================================
+   33  vi deploy.yaml
+   34  kubectl create -f deploy.yaml
+   35  kubectl get deployments
+   36  kubectl get pods
+   37  kubectl create service nodeport httpd --tcp=80:80
+   38  kubectl get svc
+   40  kubectl get svc
+   41  kubectl delete service httpd
+   42  kubectl delete deployment apache-deployment
+   43  kubectl get svc
+   44  kubectl get deployments
+   45  kubectl get pods
+
+# deployment using dashboard
+===================================
+Create new resource (+ button) select from from 
+Enter app label as httpd , image name, replicas, service (internal 80 and 80)
+Goto services , edit the file change the tyope to NodePort from Cluster IP
+# Rolling updates
+============================
+Create a new httpd image push to Docker hub and use it for the deployment
+
+  104  sudo docker run -d --name newhttp httpd
+  106  sudo docker exec -it newhttp bash
+  107  kubectl set image deployment httpd httpd=anjurose/httpd  => install vim and modify index.html under htdocs
+
+   19  vi deploy.yaml
+   20  kubectl create -f deploy.yaml
+   21  kubectl create service nodeport httpd --tcp 80:80
+   22  kubectl get svc
+   24  sudo docker run -d --name myhttp httpd
+   26  sudo docker exec -it myhttp bash
+   28  sudo docker commit 41f5 anjurose/testhttp
+   30  sudo docker push anjurose/testhttp
+   31  sudo docker login
+   32  sudo docker push anjurose/testhttp
+   34  kubectl set image deployment apache-deployment front-end=anjurose/testhttp
+   35  kubectl get pods
+   37  kubectl describe deployment apache-deployment
+   38  kubectl describe service httpd
+   39  sudo docker run -d -p 8087:80 anjurose/testhttp
+   40  kubectl get pods
+   41  kubectl describe pods apache-deployment-6d5b69f785-4st2p
+   42  kubectl set image deployment apache-deployment httpd=anjurose/testhttp
+   43  kubectl get svc
+   44  kubectl delete service httpd
+   45  kubectl delete deployment apache-deployment
+   46  kubectl get pods
+
+
+
+
+    
+
+   
