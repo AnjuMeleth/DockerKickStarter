@@ -1,0 +1,24 @@
+   53  apt-get install python-pip
+   54  pip install awscli
+   55  awscli --version
+   56  aws --version
+   57  aws configure
+   58  clear
+   59  eksctl create cluster --name my-cluster --version 1.15 --managed --asg-access
+   60  pip install awscli --upgrade --user
+   61  curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+   62  sudo mv /tmp/eksctl /usr/local/bin
+   63  eksctl version
+   64  eksctl create cluster --name my-cluster --version 1.15 --managed --asg-access
+   71  kubectl apply -f https://raw.githubusercontent.com/kubernetes/autoscaler/master/cluster-autoscaler/cloudprovider/aws/examples/cluster-autoscaler-autodiscover.yaml
+   72  kubectl -n kube-system annotate deployment.apps/cluster-autoscaler cluster-autoscaler.kubernetes.io/safe-to-evict="false"
+   73  kubectl -n kube-system edit deployment.apps/cluster-autoscaler
+   74  kubectl -n kube-system set image deployment.apps/cluster-autoscaler cluster-autoscaler=k8s.gcr.io/cluster-autoscaler:v1.18.0
+   75  kubectl -n kube-system logs -f deployment.apps/cluster-autoscaler
+
+
+ <YOUR CLUSTER NAME> with your cluster's name, and add the following options.
+
+--balance-similar-node-groups
+
+--skip-nodes-with-system-pods=false
