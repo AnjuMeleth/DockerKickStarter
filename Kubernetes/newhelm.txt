@@ -1,0 +1,43 @@
+ 1  vi /etc/ssh/sshd_config
+    2  service ssh restart
+    3  exit
+    4  curl -LO https://storage.googleapis.com/kubernetes-helm/helm-v2.13.1-linux-amd64.tar.gz
+    5  curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+    6  chmod +x ./kubectl
+    7  sudo mv ./kubectl /usr/local/bin/kubectl
+    8  kubectl version --client=true
+    9  curl -Lo minikube https://storage.googleapis.com/minikube/releases/v1.2.0/minikube-linux-amd64 && chmod +x minikube && sudo cp minikube /usr/local/bin/ && rm minikube
+   10  sudo minikube version
+   11  sudo minikube start --vm-driver=none --extra-config=apiserver.runtime-config=settings.k8s.io/v1alpha1=true
+   12  apt-get install docker.io
+   13  sudo minikube start --vm-driver=none --extra-config=apiserver.runtime-config=settings.k8s.io/v1alpha1=true
+   14  curl -LO https://storage.googleapis.com/kubernetes-helm/helm-v2.13.1-linux-amd64.tar.gz
+   15  tar -zxvf helm-v2.13.1-linux-amd64.tar.gz
+   16  sudo mv linux-amd64/helm /usr/local/bin/helm
+   17  helm version --short
+   18  helm init
+   19  helm version --short
+   20  apt-get install socat
+   21  helm init
+   22  helm version --short
+   23  helm create nginx-demo
+   24  helm install nginx-demo
+   25  pwd
+   26  history
+91  helm install guestbook
+   92  helm install ./guestbook
+   93  ls
+   94  cd demo
+   95  helm install guestbook/
+99  cd demo/guestbook/
+  100  ls
+  101  vi Chart.yaml
+  102  cd templates/
+  103  vi frontend.yaml
+  104  helm list
+  105  helm upgrade nuanced-quokka guestbook
+  106  cd ../../../
+  107  cd demo
+  108  helm upgrade nuanced-quokka guestbook
+  109  helm list
+

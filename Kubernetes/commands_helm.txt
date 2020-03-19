@@ -58,3 +58,15 @@
    57  export HELM_HOST=localhost:44134
    58  helm version --short
 
+99  cd demo/guestbook/
+  100  ls
+  101  vi Chart.yaml
+  102  cd templates/
+  103  vi frontend.yaml
+  104  helm list
+  105  helm upgrade nuanced-quokka guestbook
+  106  cd ../../../
+  107  cd demo
+  108  helm upgrade nuanced-quokka guestbook
+  109  helm list
+
