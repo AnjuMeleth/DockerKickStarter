@@ -134,3 +134,7 @@ kubeadm token create --print-join-command
    ## Pod Presets
    --extra-config=apiserver.runtime-config=settings.k8s.io/v1alpha1=true
    added at starting of cluster
+   9  sudo minikube start --vm-driver=none --extra-config=apiserver.runtime-config=settings.k8s.io/v1alpha1=true
+   10  kubectl apply -f nginx-podpreset.yaml
+   11  kubectl get podpreset
+   12  kubectl get pod website -o yaml

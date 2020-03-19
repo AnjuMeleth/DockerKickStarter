@@ -1,0 +1,60 @@
+ sudo minikube start --vm-driver=none
+    2  curl -LO https://storage.googleapis.com/kubernetes-helm/helm-v2.13.1-linux-amd64.tar.gz
+    3  tar -zxvf helm-v2.13.1-linux-amd64.tar.gz
+    4  sudo mv linux-amd64/helm /usr/local/bin/helm
+    5  helm --version --short
+    6  helm version --short
+    7  kubectl config view
+    8  helm init
+    9  helm version --short
+   10  helm init
+   11  helm version --short # error in the server tiller cant do port forwarding
+   12  apt-get install socat
+   13  helm version --short
+   14  history
+1  sudo minikube start --vm-driver=none
+    2  curl -LO https://storage.googleapis.com/kubernetes-helm/helm-v2.13.1-linux-amd64.tar.gz
+    3  tar -zxvf helm-v2.13.1-linux-amd64.tar.gz
+    4  sudo mv linux-amd64/helm /usr/local/bin/helm
+    5  helm --version --short
+    6  helm version --short
+    7  kubectl config view
+    8  helm init
+    9  helm version --short
+   10  helm init
+   11  helm version --short
+   12  apt-get install socat
+   13  helm version --short
+   14  history
+   15  helm reset
+   16  pwd
+   17  git clone https://github.com/phcollignon/helm.git
+   18  ls
+   19  cd helm
+   20  ls
+   21  cd lab4_tiller_serviceaccount/
+   22  ls
+   23  cd yaml/
+   24  ls
+   25  cp tiller-role.yaml tiller-rolebinding.yaml tiller-serviceaccount.yaml ../../../demo/
+   26  cd .././../
+   27  cd ..
+   28  mkdir demo
+   29  cd demo
+   30  cd ../helm/
+   31  cd lab4_tiller_serviceaccount/yaml/
+   32  ls
+   33  cp tiller-role.yaml tiller-rolebinding.yaml tiller-serviceaccount.yaml ../../../demo/
+   34  kubectl create namespace lab
+   35  kubectl create -f tiller-serviceaccount.yaml
+   36  kubectl create -f tiller-role.yaml
+   37  kubectl create -f tiller-rolebinding.yaml
+   38  helm init --service-account tiller --tiller-namespace lab
+52  sudo mv linux-amd64/helm /usr/local/bin/helm
+   53  helm version --short
+   54  helm init --client-only
+   55  export HELM_HOME=/home/me/.helm
+   56  helm version --short
+   57  export HELM_HOST=localhost:44134
+   58  helm version --short
+
