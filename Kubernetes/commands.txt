@@ -138,3 +138,8 @@ kubeadm token create --print-join-command
    10  kubectl apply -f nginx-podpreset.yaml
    11  kubectl get podpreset
    12  kubectl get pod website -o yaml
+   
+# Rolling updates
+127  kubectl set image deployment nginx-deployment1 nginx1=hshar/httpd
+  128  kubectl get pods
+
