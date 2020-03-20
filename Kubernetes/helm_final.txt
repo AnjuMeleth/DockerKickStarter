@@ -1,0 +1,99 @@
+  ### Install helm
+  175  curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get > install-helm.sh
+  176  chmod u+x install-helm.sh
+  177  ./install-helm.sh
+  178  kubectl -n kube-system create serviceaccount tiller
+  179  kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller
+  180  helm init --service-account tiller
+  181  kubectl get pods --namespace kube-system
+
+  ### helm install a chart
+       cp DockerKickStarter/Kubernetes/Code/lab5_helm_chart_version1/chart/Chart.yaml ./guestbook	
+       cp DockerKickStarter/Kubernetes/Code/lab5_helm_chart_version1/yaml/*.yaml ./guestbook/templates/
+  236  helm install guestbook
+  237  kubectl get svc
+
+  ### helm upgrade
+  239  vi ./guestbook/templates/Chart.yaml => 1.0 to 1.1
+  240  vi ./guestbook/Chart.yaml
+  241  cd guestbook/templates/
+  242  vi frontend.yaml => frontend 1.1
+  243  cd ..
+  244  helm list
+  245  clear
+  246  helm list
+  247  helm upgrade winsome-pig guestbook
+  248  kubectl get pods
+  249  kubectl describe pods frontend-76d584bf78-bptq2
+  250  kubectl get svc
+ 
+  ### helm uninstall
+  
+
+
+  ### istio installation
+      curl -L https://istio.io/downloadIstio | sh -
+  262  cd istio-1.5.0
+  263  export PATH=$PWD/bin:$PATH
+  264  istioctl manifest apply --set profile=demo
+  266  kubectl label namespace default istio-injection=enabled
+
+  ### istio application demo
+  267  kubectl apply -f samples/bookinfo/platform/kube/bookinfo.yaml
+  268  history
+  269  kubectl get services
+  270  kubectl get pods
+  271  kubectl exec -it $(kubectl get pod -l app=ratings -o jsonpath='{.items[0].metadata.name}') -c ratings -- curl productpage:9080/productpage | grep -o "<title>.*</title>" 
+  273  kubectl apply -f samples/bookinfo/networking/bookinfo-gateway.yaml
+  274  kubectl get gateway
+  275  export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].nodePort}')
+  276  export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="https")].nodePort}')
+  277  export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].nodePort}')
+  278  export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="https")].nodePort}')
+  279  echo $SECURE_INGRESS_PORT
+  280  export INGRESS_HOST=66.42.37.220
+  281  export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT
+  282  echo $GATEWAY_URL
+  283  echo http://$GATEWAY_URL/productpage
+  310  vi virtual-service-all-v1.yaml
+  311  vi fault-injection-details-v1.yaml
+  312  cd ~
+  313  cd istio-1.5.0/
+  314  kubectl apply -f samples/bookinfo/networking/virtual-service-all-v1.yaml
+  315  kubectl apply -f samples/bookinfo/networking/virtual-service-reviews-test-v2.yaml
+  316  kubectl apply -f samples/bookinfo/networking/virtual-service-ratings-test-delay.yaml
+  317  kubectl get virtualservice ratings -o yaml
+  With the above configuration, this is how requests flow:
+
+	productpage -> reviews:v2 -> ratings (only for user jason)
+	productpage -> reviews:v1 (for everyone else)
+
+
+  ## prometheus using istio
+  331  kubectl apply -f samples/bookinfo/platform/kube/bookinfo-ratings-v2.yaml
+  332  kubectl apply -f samples/bookinfo/platform/kube/bookinfo-db.yaml
+  333  kubectl apply -f samples/bookinfo/networking/destination-rule-all.yaml
+  334  kubectl apply -f samples/bookinfo/networking/destination-rule-all-mtls.yaml
+  335  kubectl get destinationrules -o yaml
+  336  kubectl apply -f samples/bookinfo/networking/virtual-service-ratings-db.yaml
+  337  echo http://$GATEWAY_URL/productpage
+  338  kubectl -n istio-system port-forward $(kubectl -n istio-system get pod -l app=prometheus -o jsonpath='{.items[0].metadata.name}') 9090:9090 &
+
+## logs
+# Node logs -> kubectl describe nodes
+	    -> system components
+# Pod/container ->kubectl logs
+		->kubectl describe pods
+# control plane -> get events
+  340  kubectl get pods
+  342  kubectl logs reviews-v2-568c7c9d8f-8qdxn --all-containers=true
+  343  history
+  345  kubectl get events --sort-by=.metadata.creationTimestamp	
+
+# Resource usage monitoring
+  351  git clone https://github.com/kubernetes-sigs/metrics-server.git
+  352  cd metrics-server/
+  353  kubectl apply -f deploy/kubernetes/
+  354  kubectl top node kmaster
+       kubectl top pod ratings-v1-6c9dbf6b45-56s4x --containers
+     
