@@ -96,4 +96,27 @@
   353  kubectl apply -f deploy/kubernetes/
   354  kubectl top node kmaster
        kubectl top pod ratings-v1-6c9dbf6b45-56s4x --containers
+
+
+#### Prometheus
+       kubectl create namespace monitoring	 
+  557  kubectl apply -f config-map.yml
+  558  kubectl apply -f clusterRole.yaml
+  559  vi prometheus-deployment.yml
+  560  kubectl create  -f prometheus-deployment.yaml
+  561  kubectl create  -f prometheus-deployment.yml
+  562  vi prometheus-deployment.yml
+  563  kubectl create  -f prometheus-deployment.yml
+  564  vi prometheus-deployment.yml
+  565  kubectl create  -f prometheus-deployment.yml
+  566  kubectl get svc -n monitoring
+  567  kubectl delete service prometheus-service
+  568  kubectl delete service prometheus-service -n monitoring
+  569  kubectl create  -f prometheus-deployment.yml
+  570  kubectl get deployment -n monitoring
+  571  kubectl delete deployment prometheus-deployment -n monitoring
+  572  kubectl delete service prometheus-service -n monitoring
+  573  kubectl create  -f prometheus-deployment.yml
+  574  kubectl get svc -n monitoring
+
      
