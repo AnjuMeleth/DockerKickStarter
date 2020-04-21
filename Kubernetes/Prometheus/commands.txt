@@ -1,0 +1,4 @@
+kubectl create namespace monitoring
+kubectl apply -f config-map.yml
+kubectl apply -f clusterRole.yaml
+kubectl apply -f prometheus-deployment.yml
